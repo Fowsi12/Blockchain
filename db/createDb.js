@@ -33,8 +33,7 @@ CREATE TABLE currency (
 await db.query(`
 CREATE TABLE address (
     address_id SERIAL PRIMARY KEY,
-    public_key TEXT UNIQUE NOT NULL
-);
+    public_key TEXT UNIQUE NOT NULL);
 `);
 
 //BLOCK, block_id=id PK -- previous_hash=hash på forrige blok -- hash=hash på blokken -- timestamp=tiden for oprettelsen af blokken
@@ -52,16 +51,14 @@ CREATE TABLE account_balance (
     address_id INTEGER REFERENCES address(address_id),
     currency_id INTEGER REFERENCES currency(currency_id),
     balance NUMERIC NOT NULL DEFAULT 0,
-    PRIMARY KEY (address_id, currency_id)
-    );
+    PRIMARY KEY (address_id, currency_id));
 `);
 
 //TRANSACTION, transaction_hash=unik tekststreng der repræsenterer transaktionen -- block_id=FK der refererer til den blok transaktionen er en del af
 await db.query(`
 CREATE TABLE transaction (
     transaction_hash TEXT PRIMARY KEY,
-    block_id INTEGER REFERENCES block(block_id)
-);
+    block_id INTEGER REFERENCES block(block_id));
 `);
 
 // EXCHANGE_RATE -- currency_id=id FK -- rate_to_valuta=kurs på valutaen --
@@ -69,8 +66,7 @@ await db.query(`
 CREATE TABLE exchange_rate (
     currency_id INTEGER REFERENCES currency(currency_id),
     rate_to_valuta NUMERIC NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 `);
 
 
@@ -97,7 +93,7 @@ INSERT INTO currency (currency_id, name, symbol) VALUES
 `);
 
 await db.query(` 
-    INSERT INTO address (address_id, public_key) VALUES
+INSERT INTO address (address_id, public_key) VALUES
 (1, 'coinbase'),
 (2, 'a0324425e7'),
 (3, 'b07c7e7df3'),

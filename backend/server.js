@@ -13,15 +13,18 @@ server.get("/api/address/active/:currencyId", onGetActiveAddresses);
 server.listen(port, onServerReady);
 
 async function onGetActiveAddresses(request, response) {
+  const db = request.db;
   const currencyId = request.params.currencyId;
-  const dbResult = await db.query(`
+  const result = await db.query(
+    `
     select distinct a.public_key
     from            transfer t
-    join address a on a.address_id = t.sender_id
-      or a.address_id = t.receiver_id
-    where t.currency_id = $1; 
-    `)
-    response.json(dbResult.rows);
+    join            address a on a.address_id = t.sender_id
+      or            a.address_id = t.receiver_id
+    where           t.currency_id = $1;`,
+    [currencyId],
+  );
+  response.json(result.rows);
 }
 
 function onServerReady() {
@@ -30,5 +33,6 @@ function onServerReady() {
 
 function onEachRequest(request, response, next) {
   console.log(new Date(), request.method, request.url);
+  request.db = db;
   next();
 }
