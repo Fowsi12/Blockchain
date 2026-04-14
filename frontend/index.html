@@ -8,14 +8,8 @@
   </head>
   <body>
     <script>
-      useEndpoint("GET", "/api/block/000ffe7");
-      useEndpoint("GET", "/api/block/{height}");
-      useEndpoint("GET", "/api/transaction/{hash}");
-      useEndpoint("GET", "/api/address/{id}");
-      useEndpoint("GET", "/api/address/{id}/transactions");
-      useEndpoint("GET", "/api/currency");
-      useEndpoint("GET", "/api/currency/{id}");
-      useEndpoint("GET", "/api/exchange-rate/{currencyId}");
+      useEndpoint("GET", "/api/address/active/:currencyId");
+      
     </script>
   </body>
 </html>

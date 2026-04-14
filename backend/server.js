@@ -9,13 +9,17 @@ const port = 3009;
 
 server.use(express.static("frontend"));
 server.use(onEachRequest);
-server.get("/api/block/:hash", onGetHash);
+server.get("/api/address/active/:currencyId", onGetActiveAddresses);
 server.listen(port, onServerReady);
 
-async function onGetHash(request, response) {
-  const hash = request.params.hash;
+async function onGetActiveAddresses(request, response) {
+  const currencyId = request.params.currencyId;
   const dbResult = await db.query(`
-    select * from address
+    select distinct a.public_key
+    from            transfer t
+    join address a on a.address_id = t.sender_id
+      or a.address_id = t.receiver_id
+    where t.currency_id = $1; 
     `)
     response.json(dbResult.rows);
 }
