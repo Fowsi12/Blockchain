@@ -1,26 +1,4 @@
-import { connect } from "./connect.js";
-
-const db = await connect();
-const timestamp = (await db.query("select now() as timestamp")).rows[0][
-  "timestamp"
-];
-console.log(`Recreating database on ${timestamp}...`);
-
-console.log("server is running, creating database...");
-
-console.log("Dropping existing tables...");
-await db.query("drop table if exists transfer");
-await db.query("drop table if exists transaction");
-await db.query("drop table if exists exchange_rate");
-await db.query("drop table if exists block");
-await db.query("drop table if exists address");
-await db.query("drop table if exists currency");
-// TODO: drop more tables, if they exist
-
-
-                    //Create tables HERUNDER
-
-// CURRENCY, currency_id=id, name=, symbol=,
+   // CURRENCY, currency_id=id, name=, symbol=,
 await db.query(`
 CREATE TABLE currency (
     currency_id SERIAL PRIMARY KEY,
@@ -62,11 +40,9 @@ CREATE TABLE exchange_rate (
 );
 `);
 
-
-// Ved ikke om den har brug for den PK, men nu har vi den.
 await db.query(`
 CREATE TABLE transfer (
-    transfer_id SERIAL PRIMARY KEY, 
+    transfer_id SERIAL PRIMARY KEY,
     transaction_hash TEXT REFERENCES transaction(transaction_hash),
     sender_id INTEGER REFERENCES address(address_id),
     receiver_id INTEGER REFERENCES address(address_id),
@@ -149,6 +125,3 @@ INSERT INTO transfer (transaction_hash, sender_id, receiver_id, currency_id, amo
 ('acdf', 5, 7, 1, 1),
 ('acdf', 7, 5, 3, 2390);
 `);
-
-await db.end();
-console.log("Database successfully recreated.");

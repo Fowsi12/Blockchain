@@ -1,22 +1,21 @@
 <!doctype html>
 <html>
   <head>
-    <title>Binary-Blockchain</title>
-    <script src="connect.js"></script>
-    <script src="createDb.js"></script>
-    <script src="server.js"></script>
+    <title>BinaryBlockchain</title>
+    <script src="jsonview.js"></script>
+    <script src="endpoint-user.js"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body></body>
-  <script>
-    useEndpoint("GET", "/api/block/{hash}");
-    useEndpoint("GET", "/api/block/{height}");
-    useEndpoint("GET", "/api/transaction/{hash}");
-    useEndpoint("GET", "/api/address/{id}");
-    useEndpoint("GET", "/api/address/{id}/transactions");
-    useEndpoint("GET", "/api/currency");
-    useEndpoint("GET", "/api/currency/{id}");
-    useEndpoint("GET", "/api/exchange-rate/{currencyId}");
-  </script>
+  <body>
+    <script>
+      useEndpoint("GET", "/api/block/000ffe7");
+      useEndpoint("GET", "/api/block/{height}");
+      useEndpoint("GET", "/api/transaction/{hash}");
+      useEndpoint("GET", "/api/address/{id}");
+      useEndpoint("GET", "/api/address/{id}/transactions");
+      useEndpoint("GET", "/api/currency");
+      useEndpoint("GET", "/api/currency/{id}");
+      useEndpoint("GET", "/api/exchange-rate/{currencyId}");
+    </script>
+  </body>
 </html>
- 
