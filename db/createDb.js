@@ -24,49 +24,49 @@ await db.query("drop table if exists currency");
 // CURRENCY, currency_id= hvilket nr navnet på valutaen får, name=ETH, LINK eller USD, symbol= Forkortelserne af valutaen,
 await db.query(`
 CREATE TABLE currency (
-    currency_id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    symbol TEXT NOT NULL);
+    currency_id         SERIAL PRIMARY KEY,
+    name                TEXT NOT NULL,
+    symbol              TEXT NOT NULL);
 `);
 
 // ADDRESS, address_id=id PK -- public_key=unik tekststreng der repræsenterer adressen (f.eks. en wallet-adresse) -- UNIQUE for at sikre at der ikke kan være to rækker med samme public_key
 await db.query(`
 CREATE TABLE address (
-    address_id SERIAL PRIMARY KEY,
-    public_key TEXT UNIQUE NOT NULL);
+    address_id          SERIAL PRIMARY KEY,
+    public_key          TEXT UNIQUE NOT NULL);
 `);
 
 //BLOCK, block_id=id PK -- previous_hash=hash på forrige blok -- hash=hash på blokken -- timestamp=tiden for oprettelsen af blokken
 await db.query(`
 CREATE TABLE block (
-    block_id SERIAL PRIMARY KEY,
-    previous_hash TEXT,
-    hash TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+    block_id            SERIAL PRIMARY KEY,
+    previous_hash       TEXT,
+    hash                TEXT NOT NULL,
+    timestamp           TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 `);
 
 // ACCOUNT_BALANCE, address_id=FK -- currency_id=FK -- balance=antal valuta på adressen -- PRIMARY KEY (address_id, currency_id) for at sikre at der kun er én række per adresse og valuta
 await db.query(`
 CREATE TABLE account_balance (
-    address_id INTEGER REFERENCES address(address_id),
-    currency_id INTEGER REFERENCES currency(currency_id),
-    balance NUMERIC NOT NULL DEFAULT 0,
-    PRIMARY KEY (address_id, currency_id));
+    address_id          INTEGER REFERENCES address(address_id),
+    currency_id         INTEGER REFERENCES currency(currency_id),
+    balance             NUMERIC NOT NULL DEFAULT 0,
+                        PRIMARY KEY (address_id, currency_id));
 `);
 
 //TRANSACTION, transaction_hash=unik tekststreng der repræsenterer transaktionen -- block_id=FK der refererer til den blok transaktionen er en del af
 await db.query(`
 CREATE TABLE transaction (
-    transaction_hash TEXT PRIMARY KEY,
-    block_id INTEGER REFERENCES block(block_id));
+    transaction_hash    TEXT PRIMARY KEY,
+    block_id            INTEGER REFERENCES block(block_id));
 `);
 
 // EXCHANGE_RATE -- currency_id=id FK -- rate_to_valuta=kurs på valutaen --
 await db.query(`
 CREATE TABLE exchange_rate (
-    currency_id INTEGER REFERENCES currency(currency_id),
-    rate_to_valuta NUMERIC NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+    currency_id         INTEGER REFERENCES currency(currency_id),
+    rate_to_valuta      NUMERIC NOT NULL,
+    timestamp           TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 `);
 
 
@@ -74,33 +74,33 @@ CREATE TABLE exchange_rate (
 // TRANSFER, transfer_id=id PK -- transaction_hash=FK -- sender_id=FK -- receiver_id=FK -- currency_id=FK -- amount=antal valuta der overføres -- timestamp=tiden for overførslen (vigtigt for at have med til en af de sidste opgaver)
 await db.query(`
 CREATE TABLE transfer (
-    transfer_id SERIAL PRIMARY KEY, 
-    transaction_hash TEXT REFERENCES transaction(transaction_hash),
-    sender_id INTEGER REFERENCES address(address_id),
-    receiver_id INTEGER REFERENCES address(address_id),
-    currency_id INTEGER REFERENCES currency(currency_id),
-    amount NUMERIC NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+    transfer_id         SERIAL PRIMARY KEY, 
+    transaction_hash    TEXT REFERENCES transaction(transaction_hash),
+    sender_id           INTEGER REFERENCES address(address_id),
+    receiver_id         INTEGER REFERENCES address(address_id),
+    currency_id         INTEGER REFERENCES currency(currency_id),
+    amount              NUMERIC NOT NULL,
+    timestamp           TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 `);
 
                         //Insert into tables HERUNDER
 
 await db.query(`
 INSERT INTO currency (currency_id, name, symbol) VALUES
-(1, 'Ethereum', 'ETH'),
-(2, 'Chainlink', 'LINK'),
-(3, 'USD Coin', 'USDC');
+    (1, 'Ethereum', 'ETH'),
+    (2, 'Chainlink', 'LINK'),
+    (3, 'USD Coin', 'USDC');
 `);
 
 await db.query(` 
 INSERT INTO address (address_id, public_key) VALUES
-(1, 'coinbase'),
-(2, 'a0324425e7'),
-(3, 'b07c7e7df3'),
-(4, 'c0acb3be5f'),
-(5, 'd03894efe8'),
-(6, 'e088c8d932'),
-(7, 'f076a8c8b0');
+    (1, 'coinbase'),
+    (2, 'a0324425e7'),
+    (3, 'b07c7e7df3'),
+    (4, 'c0acb3be5f'),
+    (5, 'd03894efe8'),
+    (6, 'e088c8d932'),
+    (7, 'f076a8c8b0');
 `);
 
 await db.query(`
@@ -123,6 +123,7 @@ INSERT INTO transaction (transaction_hash, block_id) VALUES
 ('acdf', 2);
 `);
 
+//
 await db.query(`
 INSERT INTO exchange_rate (currency_id, rate_to_valuta, timestamp) VALUES
 (1, 2500, '2026-03-01T06:00:00Z'),

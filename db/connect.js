@@ -20,3 +20,15 @@ export async function connect() {
 export function pool() {
   return new pg.Pool(env);
 }
+
+/* SKABELON TIL SQL BRUG I SERVER.JS
+async function onGet...(request,response) {
+const db = request.db;
+  const ... = request.params. ...
+  const dbResult = await db.query(`
+   
+    `,[...] 
+  ); 
+  response.json(dbResult.rows);
+}
+  */
