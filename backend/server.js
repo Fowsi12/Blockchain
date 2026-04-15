@@ -10,7 +10,7 @@ server.use(express.static("frontend"));
 server.use(onEachRequest);
 server.get("/api/address/active/:symbol", onGetActiveAddress);
 server.get("/api/transaction/:hash", onGetTransaction);
-server.get("/api/block/hash/:hash", onGetBlockByHash);
+server.get("/api/block/hash/:hash", onGetBlockByHash); //Nået hertil!!!!!!!!!!!!!!!
 server.listen(port, onServerReady);
 
 
@@ -32,6 +32,13 @@ async function onGetActiveAddress(request, response) {
   response.json(dbResult.rows);
 } 
 
+
+//sender, amount, currency, receiver, timestamp
+//vælger kolonnerne sender, amount, currency, receiver og timestamp
+//joiner tabellen transfer med transaction på transaction_hash
+//joiner tabellen block med transaction på block_id
+//joiner tabellen address med transfer på sender_id og receiver_id
+//joiner tabellen currency med transfer på currency_id
 async function onGetTransaction(request,response) {
 const db = request.db;
   const hash = request.params.hash
