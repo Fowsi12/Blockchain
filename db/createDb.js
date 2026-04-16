@@ -18,8 +18,7 @@ await db.query("drop table if exists address");
 await db.query("drop table if exists currency");
 // TODO: drop more tables, if they exist
 
-
-                    //Create tables HERUNDER
+//Create tables HERUNDER
 
 // CURRENCY, currency_id= hvilket nr navnet på valutaen får, name=ETH, LINK eller USD, symbol= Forkortelserne af valutaen,
 await db.query(`
@@ -69,7 +68,6 @@ CREATE TABLE exchange_rate (
     timestamp           TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 `);
 
-
 // Ved ikke om den har brug for den PK, men nu har vi den.
 // TRANSFER, transfer_id=id PK -- transaction_hash=FK -- sender_id=FK -- receiver_id=FK -- currency_id=FK -- amount=antal valuta der overføres -- timestamp=tiden for overførslen (vigtigt for at have med til en af de sidste opgaver)
 await db.query(`
@@ -83,7 +81,7 @@ CREATE TABLE transfer (
     timestamp           TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 `);
 
-                        //Insert into tables HERUNDER
+//Insert into tables HERUNDER
 
 await db.query(`
 INSERT INTO currency (currency_id, name, symbol) VALUES
