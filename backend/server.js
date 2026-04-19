@@ -16,6 +16,7 @@ server.get("/api/address/:address/currencies", onGetAddressCurrencies);
 server.get("/api/address/:address/balance", onGetBalance);
 server.get("/api/address/:address/value", onGetValue);
 server.get("/api/address/:address/flow", onGetFlow);
+server.get("/api/address/:address/transfers", onGetTransferValue);
 server.listen(port, onServerReady);
 
 //address, transfer, currency
@@ -113,23 +114,23 @@ async function onGetAddressCurrencies(request, response) {
 
 async function onGetBalance(request, response) {
   const db = request.db;
-  const balance = request.params.balance;
+  const address = request.params.address;
   const dbResult = await db.query(
     `
    Select c.symbol, ab.balance
     From  account_balance ab
-    Join  currency c ON c.currency_id = ab.currency_id
-    Join  address a ON a.address_id = ab.address_id
+    Join  currency c on c.currency_id = ab.currency_id
+    Join  address a on a.address_id = ab.address_id
     Where a.public_key = $1
       `,
-    [balance],
+    [address],
   );
   response.json(dbResult.rows);
 }
 
 async function onGetValue(request, response) {
   const db = request.db;
-  const value = request.params.value;
+  const address = request.params.address;
   const dbResult = await db.query(
     `
    Select sum(ab.balance * er.rate_to_valuta) as total_usd
@@ -141,14 +142,16 @@ async function onGetValue(request, response) {
       From exchange_rate er2
       Where er2.currency_id = ab.currency_id)
       `,
-    [value],
+    [address],
   );
   response.json(dbResult.rows);
 }
 
 async function onGetFlow(request, response) {
   const db = request.db;
-  const flow = request.params.flow;
+  const address = request.params.address;
+  const from = request.query.from;
+  const to = request.query.to;
   const dbResult = await db.query(
     `
    Select c.symbol, sum(case when a.address_id = t.receiver_id then t.amount else 0 end) as received,
@@ -159,7 +162,25 @@ async function onGetFlow(request, response) {
     Where t.timestamp between $2 and $3
     Group by c.symbol
       `,
-    [flow],
+    [address, from, to],
+  );
+  response.json(dbResult.rows);
+}
+
+async function onGetTransferValue(request, response) {
+  const db = request.db;
+  const address = request.params.address;
+  const dbResult = await db.query(
+    `
+    Select c.symbol, t.amount, t.timestamp, er.rate_to_valuta, (t.amount * er.rate_to_valuta) as usd_value
+    From transfer t
+    Join currency c on c.currency_id = t.currency_id
+    Join address a on a.public_key = $1
+    Join exchange_rate er on er.currency_id = t.currency_id
+    Where (t.sender_id = a.address_id OR t.receiver_id = a.address_id)
+    and er.timestamp <= t.timestamp
+  `,
+    [address],
   );
   response.json(dbResult.rows);
 }
