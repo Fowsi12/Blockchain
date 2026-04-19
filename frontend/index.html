@@ -10,7 +10,17 @@
     <script>
       useEndpoint("GET", "/api/address/active/ETH");
       useEndpoint("GET", "/api/address/active/LINK");
-      useEndpoint("GET", "/api/transaction/04aa")
+      useEndpoint("GET", "/api/transaction/04aa");
+      useEndpoint("GET", "/api/block/hash/0002a81");
+      useEndpoint("GET", "/api/block/height/1");
+      useEndpoint("GET", "/api/address/a0324425e7/currencies");
+      useEndpoint("GET", "/api/address/a0324425e7/balance");
+      useEndpoint("GET", "/api/address/a0324425e7/value");
+      useEndpoint(
+        "GET",
+        "/api/address/a0324425e7/flow?start=2026-03-01&end=2026-03-10",
+      );
+      useEndpoint("GET", "/api/address/a0324425e7/transfers");
     </script>
   </body>
 </html>
